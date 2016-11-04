@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Header from 'app/component/header.jsx';
+import Tree from 'app/component/tree.jsx';
 import Spinner from 'app/component/spinner.jsx';
-import getConfig from 'app/common/get-config.js';
 
 export default class App extends Component {
   static childContextTypes = {
@@ -17,13 +16,6 @@ export default class App extends Component {
     this.state = {
       showSpinner: false
     };
-    this.setShowSpinner(true);
-    getConfig().then(config => {
-      this.setState({
-        config
-      });
-      this.setShowSpinner(false);
-    });
   }
   setShowSpinner = this.setShowSpinner.bind(this);
   setShowSpinner(showSpinner) {
@@ -35,14 +27,7 @@ export default class App extends Component {
     return (
       <MuiThemeProvider>
         <div>
-          <Header />
-          Your app
-          {
-          this.state.config &&
-          <div>
-            { this.state.config.name }
-          </div>
-          }
+          <Tree />
           {
             this.state.showSpinner &&
             <Spinner />
