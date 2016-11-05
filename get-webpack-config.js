@@ -10,7 +10,8 @@ module.exports = ({ isProd = false, isWebpackDevServer = false } = {}) => ({
   entry: {
     [`app${isProd ? '.min' : ''}`]: (
       isWebpackDevServer ? ['webpack-hot-middleware/client'] : []
-    ).concat(path.join(__dirname, 'app', 'index.js'))
+    ).concat(path.join(__dirname, 'app', 'index.js')),
+    'get-tree-by-app-data-worker': path.join(__dirname, 'app', 'get-tree-by-app-data-worker.js')
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -29,6 +30,7 @@ module.exports = ({ isProd = false, isWebpackDevServer = false } = {}) => ({
     }),
     new HtmlWebpackPlugin({
       minify: {},
+      excludeChunks: ['get-tree-by-app-data-worker'],
       template: path.join(__dirname, 'app', 'index.html'),
       inject: 'head'
     }),

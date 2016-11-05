@@ -13,5 +13,8 @@ module.exports = {
         config: getWebpackConfig()
       }
     }
+  },
+  rules: {
+    'jsx-a11y/no-static-element-interactions': [0]
   }
 };

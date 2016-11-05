@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import getAppData from 'app/common/get-app-data.js';
-import getTreeByAppData from 'app/common/get-tree-by-app-data.js';
+import getTreeByAppData from 'app/common/get-tree-by-app-data-promise.js';
+import Node from './node.jsx';
 
 const DOWNLOADING = 0;
 const PROCESSING = 1;
@@ -21,7 +22,18 @@ const getStepString = step => {
   }
 };
 
-export default class Header extends Component {
+export default class Tree extends Component {
+  static renderNode(node) {
+    const { name, type, children } = node;
+    return (
+      <Node key={name} name={name} type={type}>
+        {
+          Array.isArray(children) ?
+          children.map(Tree.renderNode) : undefined
+        }
+      </Node>
+    );
+  }
   componentWillMount() {
     this.state = {
       step: DOWNLOADING
@@ -30,9 +42,10 @@ export default class Header extends Component {
       this.setState({
         step: PROCESSING
       }, () => {
-        // Executing this `setState` in the callback of the other `setState` because `getTreeByAppData` takes time to execute
-        this.setState({
-          tree: getTreeByAppData(appData)
+        getTreeByAppData(appData).then(tree => {
+          this.setState({
+            tree
+          });
         });
       });
     });
@@ -45,6 +58,12 @@ export default class Header extends Component {
           !tree &&
           <div>
             { getStepString(step) }
+          </div>
+        }
+        {
+          tree &&
+          <div>
+            { Tree.renderNode(tree) }
           </div>
         }
       </div>
